@@ -10,6 +10,12 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 </head>
 <body>
 
@@ -143,16 +149,45 @@
             </div>
         </nav>
         <div class="container" style="border: 1px solid black;border-radius: 10px;padding: 20px">
-            <form action="/admin/danhmuc/create" method="post" th:object="${danhmuc}">
-                <input type="text" hidden  th:field="*{id}">
-                <div class="form-group">
-                    <label for="formGroupExampleInput">Mã</label>
-                    <input type="text" th:field="*{ma}" class="form-control" id="formGroupExampleInput" placeholder="Mã">
+            <div>
+                <center><h1>Sửa Địa Chỉ</h1></center>
+            </div>
+            <form th:action="@{|/admin/diachi/update/${diachi.khachHang.id}}" method="post" th:object="${diachi}">
+
+                <label>Khách Hàng :</label>
+                <select class="form-control" th:field="*{khachHang.id}" disabled>
+                    <option th:value="${diachi.khachHang.id}">[[${diachi.khachHang.hoten}]]</option>
+                </select>
+
+                <br>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label>Thành Phố :</label>
+                        <select class="form-control" th:field="*{thanhpho}" name="province" id="province">
+                            <option th:value="${diachi.thanhpho}" >[[${diachi.thanhpho}]]</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Huyện :</label>
+                        <select class="form-control" name="district" id="district" th:field="*{huyen}">
+                            <option th:value="${diachi.huyen}" >[[${diachi.huyen}]]</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Phường :</label>
+                        <select class="form-control" name="ward" id="ward" th:field="*{xa}">
+                            <option th:value="${diachi.xa}">[[${diachi.xa}]]</option>
+                        </select>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="formGroupExampleInput2">Tên</label>
-                    <input type="text" th:field="*{ten}" class="form-control" id="formGroupExampleInput2" placeholder="Tên">
+                    <label for="formGroupExampleInput">Đia Chỉ</label>
+                    <input type="text" th:field="*{tendiachi}"  class="form-control" id="formGroupExampleInput" placeholder="">
                 </div>
+
                 <fieldset class="form-group">
                     <div class="row">
                         <legend class="col-form-label col-sm-2 pt-0">Trạng Thái : </legend>
@@ -172,33 +207,74 @@
                         </div>
                     </div>
                 </fieldset>
-                <button class="btn btn-primary" type="submit">Thêm Mới</button>
+
+                <button class="btn btn-primary" type="submit">Sửa</button>
+                <a th:href="@{|/admin/khachhang/detail/${diachi.khachHang.id}|}"><button type="button" class="btn btn-secondary">Quay Lại</button></a>
             </form>
-            <div style="margin: 20px">
-                <h1 style="text-transform: uppercase;
-    color: black;font-family: 'Lora';text-align: center;">Danh Sách Danh Mục</h1>
-                <table class="table" style="margin: 20px 0;">
-                    <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Mã</th>
-                        <th scope="col">Tên Danh Mục</th>
-                        <th scope="col">Trạng Thái</th>
-                        <th scope="col">Sự Kiện</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="item:${listDanhMuc}">
-                            <th scope="row">[[${item.ma}]]</th>
-                            <th>[[${item.ten}]]</th>
-                            <th th:text="${item.trangthai == 1 ? 'Hoạt Động' : 'Ngừng Hoạt Động'}"></th>
-                            <th><a th:href="@{|/admin/danhmuc/detail/${item.ma}|}">Chi Tiết</a></th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
+
     </div>
 </div>
+
+<script>
+    // 1. what is API
+    // 2. How do I call API
+    // 3. Explain code
+    const host = "https://provinces.open-api.vn/api/";
+    var callAPI = (api) => {
+        return axios.get(api)
+            .then((response) => {
+                renderData(response.data, "province");
+            });
+    }
+    callAPI('https://provinces.open-api.vn/api/?depth=1');
+    var callApiDistrict = (api) => {
+        return axios.get(api)
+            .then((response) => {
+                renderData(response.data.districts, "district");
+            });
+    }
+    var callApiWard = (api) => {
+        return axios.get(api)
+            .then((response) => {
+                renderData(response.data.wards, "ward");
+            });
+    }
+
+    var renderData = (array, select) => {
+        let row = '<option th:value="${diachi.thanhpho}" ">[[${diachi.thanhpho}]]</option>';
+
+        array.forEach(element => {
+            row += `<option value="${element.name}" data-code="${element.code}">${element.name}</option>`
+        });
+        document.querySelector("#" + select).innerHTML = row
+    }
+
+    $("#province").change(() => {
+        const selectedCode = $("#province option:selected").data("code");
+        callApiDistrict(host + "p/" + selectedCode + "?depth=2");
+        printResult();
+    });
+    $("#district").change(() => {
+        const selectedCode = $("#district option:selected").data("code");
+        callApiWard(host + "d/" + selectedCode + "?depth=2");
+        printResult();
+    });
+    $("#ward").change(() => {
+        printResult();
+    })
+
+    var printResult = () => {
+        if ($("#district").val() != "" && $("#province").val() != "" &&
+            $("#ward").val() != "") {
+            let result = $("#province option:selected").text() +
+                " | " + $("#district option:selected").text() + " | " +
+                $("#ward option:selected").text();
+            $("#result").text(result)
+        }
+
+    }
+</script>
 
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/popper.js"></script>

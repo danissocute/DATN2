@@ -8,8 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -18,7 +17,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "khach_hang")
-public class KhachHang implements Serializable {
+public class KhachHang  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -29,6 +28,8 @@ public class KhachHang implements Serializable {
     private String hoten;
 
     @Column(name = "ngay_sinh")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date ngaysinh;
 
     @Column(name = "sdt")
@@ -43,6 +44,5 @@ public class KhachHang implements Serializable {
     @Column(name = "trangthai")
     private Integer trangthai;
 
-    @OneToMany(mappedBy = "khachHang", cascade = CascadeType.ALL)
-    private List<DiaChi> diaChiList;
+
 }

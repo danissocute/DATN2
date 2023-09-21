@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -17,32 +17,35 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "khach_hang")
-public class KhachHang implements Serializable {
+@Table(name = "hoa_don")
+public class HoaDon implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     private String ma;
 
-    @Column(name = "ho_ten")
-    private String hoten;
+    @Column(name = "ngay_tao")
+    private Date ngaytao;
 
-    @Column(name = "ngay_sinh")
-    private Date ngaysinh;
+    @Column(name = "ngay_thanh_toan")
+    private Date ngaythanhtoan;
 
-    @Column(name = "sdt")
-    private String sdt;
+    @Column(name = "mo_ta")
+    private String mota;
 
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "mat_khau")
-    private String matkhau;
+    @Column(name = "tong_tien")
+    private String tongtien;
 
     @Column(name = "trangthai")
     private Integer trangthai;
 
-    @OneToMany(mappedBy = "khachHang", cascade = CascadeType.ALL)
-    private List<DiaChi> diaChiList;
+    @ManyToOne
+    @JoinColumn(name = "id_nhan_vien")
+    private NhanVien nhanVien;
+
+    @ManyToOne
+    @JoinColumn(name = "id_khach_hang")
+    private KhachHang khachHang;
 }

@@ -1,7 +1,6 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.DanhMuc;
-import com.example.demo.entity.PageDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -26,15 +25,6 @@ public class DanhMucRepo {
                 restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<DanhMuc>>() {
                 });
 
-        return response.getBody();
-    }
-    public PageDTO<DanhMuc> getPageDanhMuc(Integer page) {
-        ResponseEntity<PageDTO<DanhMuc>> response = restTemplate.exchange(
-                getUrl("phantrang?page="+page),
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<PageDTO<DanhMuc>>() {}
-        );
         return response.getBody();
     }
 

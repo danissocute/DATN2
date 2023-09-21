@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -17,8 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "khach_hang")
-public class KhachHang implements Serializable {
+@Table(name = "nhan_vien")
+public class NhanVien {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -31,6 +29,12 @@ public class KhachHang implements Serializable {
     @Column(name = "ngay_sinh")
     private Date ngaysinh;
 
+    @Column(name = "dia_chi")
+    private String diachi;
+
+    @Column(name = "thanh_pho")
+    private String thanhpho;
+
     @Column(name = "sdt")
     private String sdt;
 
@@ -42,7 +46,4 @@ public class KhachHang implements Serializable {
 
     @Column(name = "trangthai")
     private Integer trangthai;
-
-    @OneToMany(mappedBy = "khachHang", cascade = CascadeType.ALL)
-    private List<DiaChi> diaChiList;
 }
